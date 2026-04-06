@@ -38,7 +38,15 @@ public class VoteController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
 
         String voteTypeStr = body.get("voteType"); // "UPVOTE" or "DOWNVOTE"
-        Vote.VoteType voteType = Vote.VoteType.valueOf(voteTypeStr.toUpperCase());
+        if (voteTypeStr == null || voteTypeStr.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "voteType is required (UPVOTE or DOWNVOTE)");
+        }
+        Vote.VoteType voteType;
+        try {
+            voteType = Vote.VoteType.valueOf(voteTypeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid voteType: " + voteTypeStr);
+        }
 
         Optional<Vote> existing = voteRepository.findByUserIdAndPostId(user.getId(), postId);
 
@@ -80,7 +88,15 @@ public class VoteController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         String voteTypeStr = body.get("voteType");
-        Vote.VoteType voteType = Vote.VoteType.valueOf(voteTypeStr.toUpperCase());
+        if (voteTypeStr == null || voteTypeStr.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "voteType is required (UPVOTE or DOWNVOTE)");
+        }
+        Vote.VoteType voteType;
+        try {
+            voteType = Vote.VoteType.valueOf(voteTypeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid voteType: " + voteTypeStr);
+        }
 
         Optional<Vote> existing = voteRepository.findByUserIdAndCommentId(user.getId(), commentId);
 

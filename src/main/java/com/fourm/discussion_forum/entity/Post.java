@@ -1,6 +1,6 @@
 package com.fourm.discussion_forum.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

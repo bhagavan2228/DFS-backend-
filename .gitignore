@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local logs and diagnostic artifacts ###
+*.log
+*_utf8.log
+*check*.log
+*errors*.txt
+*check*.txt
+schema*.txt
+src_list.txt
+frontend_files.txt

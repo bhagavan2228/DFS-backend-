@@ -1,0 +1,16 @@
+﻿src\components\Header.jsx
+src\components\Layout.jsx
+src\components\LoadingSpinner.jsx
+src\components\ProtectedRoute.jsx
+src\context\AuthContext.jsx
+src\lib\axios.js
+src\pages\Admin.jsx
+src\pages\CreateThread.jsx
+src\pages\Dashboard.jsx
+src\pages\Login.jsx
+src\pages\Register.jsx
+src\pages\Thread.jsx
+src\services\api.js
+src\store\authStore.js
+src\App.jsx
+src\main.jsx

@@ -1,0 +1,34 @@
+﻿mysql : mysql: [Warning] 
+Using a password on the 
+command line interface 
+can be insecure.
+At line:1 char:1
++ mysql -uroot -p1162 dfs 
+-e "DESCRIBE threads; 
+DESCRIBE replies;" 2>&1 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (m  
+  ysql: [Warning...an b   
+ e insecure.:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+author	varchar(255)	NO		NULL	
+content	text	NO		NULL	
+created_at	datetime(6)	NO		NULL	
+title	varchar(255)	NO		NULL	
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+author	varchar(255)	NO		NULL	
+content	text	NO		NULL	
+created_at	datetime(6)	NO		NULL	
+likes	int	NO		NULL	
+thread_id	bigint	NO	MUL	NULL	

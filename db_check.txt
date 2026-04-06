@@ -1,0 +1,33 @@
+﻿mysql : mysql: [Warning] 
+Using a password on the 
+command line interface 
+can be insecure.
+At line:1 char:1
++ mysql -uroot -p1162 dfs 
+-e "SELECT id, name, 
+email FROM users ORDER B 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (m  
+  ysql: [Warning...an b   
+ e insecure.:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+id	name	email
+7	UITestUser	uitest@forum.com
+6	John Doe	john@example.com
+5	apitest2	apitest2@forum.com
+4	apitest	apitest@forum.com
+3	Test Uer	tet@example.com
+id	title	author
+5	buhjpklp['/	UITestUser
+4	UI Integration Test	UITestUser
+3	My First Thread	John Doe
+2	API Check Thread	apitest2
+1	Test Thread	apitest

@@ -33,6 +33,7 @@ public class NotificationController {
 
     @PatchMapping("/{id}/read")
     public ResponseEntity<Notification> markAsRead(@PathVariable Long id) {
+        if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Notification ID cannot be null");
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification not found"));
         notification.setIsRead(true);
@@ -51,6 +52,7 @@ public class NotificationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (id == null) return ResponseEntity.badRequest().build();
         notificationRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

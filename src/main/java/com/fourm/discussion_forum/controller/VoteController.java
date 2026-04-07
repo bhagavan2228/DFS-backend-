@@ -32,6 +32,9 @@ public class VoteController {
     public ResponseEntity<Map<String, Object>> votePost(@PathVariable Long postId,
                                                          @RequestBody Map<String, String> body,
                                                          Authentication auth) {
+        if (postId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post ID is required");
+        }
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Post post = postRepository.findById(postId)
@@ -82,6 +85,9 @@ public class VoteController {
     public ResponseEntity<Map<String, Object>> voteComment(@PathVariable Long commentId,
                                                             @RequestBody Map<String, String> body,
                                                             Authentication auth) {
+        if (commentId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment ID is required");
+        }
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Comment comment = commentRepository.findById(commentId)

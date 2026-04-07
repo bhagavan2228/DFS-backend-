@@ -32,6 +32,7 @@ public class CommentController {
 
     @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<List<Comment>> getByPost(@PathVariable Long postId) {
+        if (postId == null) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(commentRepository.findByPostId(postId));
     }
 
@@ -39,6 +40,7 @@ public class CommentController {
     public ResponseEntity<Comment> create(@PathVariable Long postId,
                                           @RequestBody Map<String, Object> body,
                                           Authentication auth) {
+        if (postId == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post ID cannot be null");
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Post post = postRepository.findById(postId)
@@ -50,7 +52,7 @@ public class CommentController {
         comment.setPost(post);
 
         if (body.containsKey("parentCommentId") && body.get("parentCommentId") != null) {
-            Long parentId = Long.valueOf(body.get("parentCommentId").toString());
+            long parentId = Long.parseLong(body.get("parentCommentId").toString());
             Comment parent = commentRepository.findById(parentId).orElse(null);
             comment.setParentComment(parent);
         }
@@ -60,6 +62,7 @@ public class CommentController {
 
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (id == null) return ResponseEntity.badRequest().build();
         commentRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

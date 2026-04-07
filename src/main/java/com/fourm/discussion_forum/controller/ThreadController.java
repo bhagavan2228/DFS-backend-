@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api/threads")
@@ -31,12 +32,12 @@ public class ThreadController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Thread> getThreadById(@PathVariable Long id) {
+    public ResponseEntity<Thread> getThreadById(@PathVariable @NonNull Long id) {
         return ResponseEntity.ok(threadService.getThreadById(id));
     }
 
     @PostMapping("/{id}/summarize")
-    public ResponseEntity<SummaryResponse> summarizeThread(@PathVariable Long id) {
+    public ResponseEntity<SummaryResponse> summarizeThread(@PathVariable @NonNull Long id) {
         String summary = threadService.summarizeThread(id);
         return ResponseEntity.ok(new SummaryResponse(summary));
     }

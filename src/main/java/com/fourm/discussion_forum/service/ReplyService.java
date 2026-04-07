@@ -33,6 +33,7 @@ public class ReplyService {
     }
 
     public List<Reply> getRepliesByThreadId(Long threadId) {
+        java.util.Objects.requireNonNull(threadId, "Thread ID must not be null");
         return replyRepository.findByThreadId(threadId);
     }
 
@@ -42,6 +43,7 @@ public class ReplyService {
             throw new RuntimeException("Content rejected: Internal AI filter flagged toxic language.");
         }
 
+        java.util.Objects.requireNonNull(threadId, "Thread ID must not be null");
         Thread thread = threadRepository.findById(threadId)
                 .orElseThrow(() -> new RuntimeException("Thread not found"));
 
@@ -81,6 +83,7 @@ public class ReplyService {
     }
 
     public java.util.Map<String, Object> toggleLike(Long replyId, String email) {
+        java.util.Objects.requireNonNull(replyId, "Reply ID must not be null");
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new RuntimeException("Reply not found"));
 

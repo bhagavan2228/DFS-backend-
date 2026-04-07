@@ -3,6 +3,7 @@ package com.fourm.discussion_forum.controller;
 import com.fourm.discussion_forum.entity.Category;
 import com.fourm.discussion_forum.repository.CategoryRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,18 +24,19 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getById(@PathVariable Long id) {
+    public ResponseEntity<Category> getById(@PathVariable @NonNull Long id) {
         return ResponseEntity.ok(categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found")));
     }
 
     @PostMapping
-    public ResponseEntity<Category> create(@RequestBody Category category) {
-        return ResponseEntity.ok(categoryRepository.save(category));
+    public ResponseEntity<Category> create(@RequestBody @NonNull Category category) {
+        Category savedCategory = categoryRepository.save(category);
+        return ResponseEntity.ok(savedCategory);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @NonNull Long id) {
         categoryRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

@@ -37,6 +37,7 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> getById(@PathVariable Long id) {
+        if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post ID cannot be null");
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
         post.setViewCount(post.getViewCount() + 1);
@@ -46,6 +47,7 @@ public class PostController {
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<Post>> getByCategory(@PathVariable Long categoryId) {
+        if (categoryId == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Category ID cannot be null");
         return ResponseEntity.ok(postRepository.findByCategoryId(categoryId));
     }
 
@@ -60,31 +62,44 @@ public class PostController {
         post.setUser(user);
 
         if (body.containsKey("categoryId") && body.get("categoryId") != null) {
-            Long catId = Long.valueOf(body.get("categoryId").toString());
+            long catId = Long.parseLong(body.get("categoryId").toString());
             Category category = categoryRepository.findById(catId).orElse(null);
             post.setCategory(category);
         }
 
-        if (body.containsKey("tags") && body.get("tags") != null) {
-            post.setTags((List<String>) body.get("tags"));
+        if (body.containsKey("tags") && body.get("tags") instanceof List) {
+            List<?> rawTags = (List<?>) body.get("tags");
+            List<String> tags = new java.util.ArrayList<>();
+            for (Object obj : rawTags) {
+                if (obj instanceof String) {
+                    tags.add((String) obj);
+                }
+            }
+            post.setTags(tags);
         }
 
-        return ResponseEntity.ok(postRepository.save(post));
+        @SuppressWarnings("null")
+        Post savedPost = postRepository.save(post);
+        return ResponseEntity.ok(savedPost);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Map<String, Object> body, Authentication auth) {
+        if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post ID cannot be null");
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
 
         if (body.containsKey("title")) post.setTitle((String) body.get("title"));
         if (body.containsKey("description")) post.setDescription((String) body.get("description"));
 
-        return ResponseEntity.ok(postRepository.save(post));
+        @SuppressWarnings("null")
+        Post savedPost = postRepository.save(post);
+        return ResponseEntity.ok(savedPost);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (id == null) return ResponseEntity.badRequest().build();
         postRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

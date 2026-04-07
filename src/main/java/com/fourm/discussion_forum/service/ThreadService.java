@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.lang.NonNull;
 
 @Service
 public class ThreadService {
@@ -34,7 +35,7 @@ public class ThreadService {
         return threads;
     }
 
-    public Thread getThreadById(Long id) {
+    public Thread getThreadById(@NonNull Long id) {
         Thread thread = threadRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Thread not found"));
         thread.setReplies((int) replyRepository.countByThread_Id(thread.getId()));
@@ -71,7 +72,7 @@ public class ThreadService {
         return threadRepository.findByTitleContainingIgnoreCase(title);
     }
 
-    public String summarizeThread(Long id) {
+    public String summarizeThread(@NonNull Long id) {
         Thread thread = getThreadById(id);
         List<Reply> replies = replyRepository.findByThreadId(id);
         

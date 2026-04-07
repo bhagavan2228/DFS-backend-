@@ -39,6 +39,9 @@ public class SavedPostController {
 
     @PostMapping("/{postId}")
     public ResponseEntity<SavedPost> savePost(@PathVariable Long postId, Authentication auth) {
+        if (postId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post ID cannot be null");
+        }
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Post post = postRepository.findById(postId)
@@ -57,6 +60,9 @@ public class SavedPostController {
     @DeleteMapping("/{postId}")
     @Transactional
     public ResponseEntity<Void> unsavePost(@PathVariable Long postId, Authentication auth) {
+        if (postId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post ID cannot be null");
+        }
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         savedPostRepository.deleteByUserIdAndPostId(user.getId(), postId);

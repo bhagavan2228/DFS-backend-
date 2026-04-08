@@ -47,12 +47,14 @@ public class Post {
     private Long bestCommentId;
 
     @ElementCollection
-    @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
+    @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"),
+        foreignKey = @ForeignKey(name = "fk_post_tags_post"))
     @Column(name = "tags")
     private List<String> tags = new ArrayList<>();
 
     @ElementCollection
-    @CollectionTable(name = "post_attachments", joinColumns = @JoinColumn(name = "post_id"))
+    @CollectionTable(name = "post_attachments", joinColumns = @JoinColumn(name = "post_id"),
+        foreignKey = @ForeignKey(name = "fk_post_attachments_post"))
     @Column(name = "attachments")
     private List<String> attachments = new ArrayList<>();
 

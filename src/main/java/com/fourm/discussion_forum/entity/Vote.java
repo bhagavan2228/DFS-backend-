@@ -5,7 +5,11 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "votes")
+@Table(name = "votes", indexes = {
+    @Index(name = "idx_user_post", columnList = "user_id, post_id"),
+    @Index(name = "idx_user_comment", columnList = "user_id, comment_id"),
+    @Index(name = "idx_user_reply", columnList = "user_id, reply_id")
+})
 public class Vote {
 
     public enum VoteType { UPVOTE, DOWNVOTE }
@@ -35,6 +39,11 @@ public class Vote {
     @JsonIgnore
     private Comment comment;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reply_id")
+    @JsonIgnore
+    private Reply reply;
+
     @PrePersist
     protected void onCreate() { createdAt = LocalDateTime.now(); }
 
@@ -52,4 +61,6 @@ public class Vote {
     public void setPost(Post post) { this.post = post; }
     public Comment getComment() { return comment; }
     public void setComment(Comment comment) { this.comment = comment; }
+    public Reply getReply() { return reply; }
+    public void setReply(Reply reply) { this.reply = reply; }
 }

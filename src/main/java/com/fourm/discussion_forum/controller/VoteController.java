@@ -54,7 +54,7 @@ public class VoteController {
         Optional<Vote> existing = voteRepository.findByUserIdAndPostId(user.getId(), postId);
 
         if (existing.isPresent()) {
-            Vote vote = existing.get();
+            Vote vote = java.util.Objects.requireNonNull(existing.get());
             if (vote.getVoteType() == voteType) {
                 // Remove vote (toggle off)
                 if (voteType == Vote.VoteType.UPVOTE) post.setUpvotes(post.getUpvotes() - 1);
@@ -107,7 +107,7 @@ public class VoteController {
         Optional<Vote> existing = voteRepository.findByUserIdAndCommentId(user.getId(), commentId);
 
         if (existing.isPresent()) {
-            Vote vote = existing.get();
+            Vote vote = java.util.Objects.requireNonNull(existing.get());
             if (vote.getVoteType() == voteType) {
                 if (voteType == Vote.VoteType.UPVOTE) comment.setUpvotes(comment.getUpvotes() - 1);
                 else comment.setDownvotes(comment.getDownvotes() - 1);

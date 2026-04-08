@@ -2,8 +2,6 @@ package com.fourm.discussion_forum.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -31,13 +29,6 @@ public class Reply {
     @JsonIgnore
     private Thread thread;
 
-    // Tracks which user IDs have liked this reply (prevents duplicate likes)
-    @ElementCollection
-    @CollectionTable(name = "reply_likes", joinColumns = @JoinColumn(name = "reply_id"))
-    @Column(name = "user_id")
-    @JsonIgnore
-    private Set<Long> likedByUserIds = new HashSet<>();
-
     public Reply() {}
 
     @PrePersist
@@ -57,6 +48,4 @@ public class Reply {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public Thread getThread() { return thread; }
     public void setThread(Thread thread) { this.thread = thread; }
-    public Set<Long> getLikedByUserIds() { return likedByUserIds; }
-    public void setLikedByUserIds(Set<Long> likedByUserIds) { this.likedByUserIds = likedByUserIds; }
 }

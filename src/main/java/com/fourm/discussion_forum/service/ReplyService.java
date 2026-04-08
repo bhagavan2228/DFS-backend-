@@ -9,11 +9,16 @@ import com.fourm.discussion_forum.repository.NotificationRepository;
 import com.fourm.discussion_forum.repository.ReplyRepository;
 import com.fourm.discussion_forum.repository.ThreadRepository;
 import com.fourm.discussion_forum.repository.UserRepository;
+import com.fourm.discussion_forum.repository.VoteRepository;
+import com.fourm.discussion_forum.entity.Vote;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class ReplyService {
 
     private final ReplyRepository replyRepository;
@@ -21,15 +26,18 @@ public class ReplyService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final ToxicityService toxicityService;
+    private final VoteRepository voteRepository;
 
     public ReplyService(ReplyRepository replyRepository, ThreadRepository threadRepository,
                         UserRepository userRepository, NotificationRepository notificationRepository,
-                        ToxicityService toxicityService) {
+                        ToxicityService toxicityService,
+                        VoteRepository voteRepository) {
         this.replyRepository = replyRepository;
         this.threadRepository = threadRepository;
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
         this.toxicityService = toxicityService;
+        this.voteRepository = voteRepository;
     }
 
     public List<Reply> getRepliesByThreadId(Long threadId) {
@@ -90,19 +98,26 @@ public class ReplyService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        boolean alreadyLiked = reply.getLikedByUserIds().contains(user.getId());
+        Optional<Vote> existing = voteRepository.findByUserIdAndReplyId(user.getId(), replyId);
 
-        if (alreadyLiked) {
-            // Unlike — remove user and decrement
-            reply.getLikedByUserIds().remove(user.getId());
+        boolean liked;
+        if (existing.isPresent()) {
+            // Unlike
+            voteRepository.delete(java.util.Objects.requireNonNull(existing.get()));
             reply.setLikes(Math.max(0, reply.getLikes() - 1));
+            liked = false;
         } else {
-            // Like — add user and increment
-            reply.getLikedByUserIds().add(user.getId());
+            // Like
+            Vote vote = new Vote();
+            vote.setUser(user);
+            vote.setReply(reply);
+            vote.setVoteType(Vote.VoteType.UPVOTE);
+            voteRepository.save(vote);
             reply.setLikes(reply.getLikes() + 1);
+            liked = true;
         }
 
         replyRepository.save(reply);
-        return java.util.Map.of("likes", reply.getLikes(), "liked", !alreadyLiked);
+        return java.util.Map.of("likes", reply.getLikes(), "liked", liked);
     }
 }
